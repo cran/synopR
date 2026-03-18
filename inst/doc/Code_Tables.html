@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>Code Tables</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Code Tables</h1>
+
+
+
+<p>The next information were extracted from <em>World Meteorological
+Organization (WMO). Manual on Codes (WMO-No. 306), Volume I.1. Geneva,
+2019.</em>.</p>
+<div id="visibility-in-km" class="section level2">
+<h2>Visibility (in km)</h2>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="co"># From Code Table 4377</span></span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>visibility_codes <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>  <span class="st">&quot;00&quot;</span> <span class="ot">=</span> <span class="st">&quot;&lt; 0.1&quot;</span>,  <span class="st">&quot;01&quot;</span> <span class="ot">=</span> <span class="st">&quot;0.1&quot;</span>,    <span class="st">&quot;02&quot;</span> <span class="ot">=</span> <span class="st">&quot;0.2&quot;</span>,    <span class="st">&quot;03&quot;</span> <span class="ot">=</span> <span class="st">&quot;0.3&quot;</span>,    <span class="st">&quot;04&quot;</span> <span class="ot">=</span> <span class="st">&quot;0.4&quot;</span>,</span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>  <span class="st">&quot;05&quot;</span> <span class="ot">=</span> <span class="st">&quot;0.5&quot;</span>,    <span class="st">&quot;06&quot;</span> <span class="ot">=</span> <span class="st">&quot;0.6&quot;</span>,    <span class="st">&quot;07&quot;</span> <span class="ot">=</span> <span class="st">&quot;0.7&quot;</span>,    <span class="st">&quot;08&quot;</span> <span class="ot">=</span> <span class="st">&quot;0.8&quot;</span>,    <span class="st">&quot;09&quot;</span> <span class="ot">=</span> <span class="st">&quot;0.9&quot;</span>,</span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>  <span class="st">&quot;10&quot;</span> <span class="ot">=</span> <span class="st">&quot;1&quot;</span>,      <span class="st">&quot;11&quot;</span> <span class="ot">=</span> <span class="st">&quot;1.1&quot;</span>,    <span class="st">&quot;12&quot;</span> <span class="ot">=</span> <span class="st">&quot;1.2&quot;</span>,    <span class="st">&quot;13&quot;</span> <span class="ot">=</span> <span class="st">&quot;1.3&quot;</span>,    <span class="st">&quot;14&quot;</span> <span class="ot">=</span> <span class="st">&quot;1.4&quot;</span>,</span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a>  <span class="st">&quot;15&quot;</span> <span class="ot">=</span> <span class="st">&quot;1.5&quot;</span>,    <span class="st">&quot;16&quot;</span> <span class="ot">=</span> <span class="st">&quot;1.6&quot;</span>,    <span class="st">&quot;17&quot;</span> <span class="ot">=</span> <span class="st">&quot;1.7&quot;</span>,    <span class="st">&quot;18&quot;</span> <span class="ot">=</span> <span class="st">&quot;1.8&quot;</span>,    <span class="st">&quot;19&quot;</span> <span class="ot">=</span> <span class="st">&quot;1.9&quot;</span>,</span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a>  <span class="st">&quot;20&quot;</span> <span class="ot">=</span> <span class="st">&quot;2&quot;</span>,      <span class="st">&quot;21&quot;</span> <span class="ot">=</span> <span class="st">&quot;2.1&quot;</span>,    <span class="st">&quot;22&quot;</span> <span class="ot">=</span> <span class="st">&quot;2.2&quot;</span>,    <span class="st">&quot;23&quot;</span> <span class="ot">=</span> <span class="st">&quot;2.3&quot;</span>,    <span class="st">&quot;24&quot;</span> <span class="ot">=</span> <span class="st">&quot;2.4&quot;</span>,</span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a>  <span class="st">&quot;25&quot;</span> <span class="ot">=</span> <span class="st">&quot;2.5&quot;</span>,    <span class="st">&quot;26&quot;</span> <span class="ot">=</span> <span class="st">&quot;2.6&quot;</span>,    <span class="st">&quot;27&quot;</span> <span class="ot">=</span> <span class="st">&quot;2.7&quot;</span>,    <span class="st">&quot;28&quot;</span> <span class="ot">=</span> <span class="st">&quot;2.8&quot;</span>,    <span class="st">&quot;29&quot;</span> <span class="ot">=</span> <span class="st">&quot;2.9&quot;</span>,</span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a>  <span class="st">&quot;30&quot;</span> <span class="ot">=</span> <span class="st">&quot;3&quot;</span>,      <span class="st">&quot;31&quot;</span> <span class="ot">=</span> <span class="st">&quot;3.1&quot;</span>,    <span class="st">&quot;32&quot;</span> <span class="ot">=</span> <span class="st">&quot;3.2&quot;</span>,    <span class="st">&quot;33&quot;</span> <span class="ot">=</span> <span class="st">&quot;3.3&quot;</span>,    <span class="st">&quot;34&quot;</span> <span class="ot">=</span> <span class="st">&quot;3.4&quot;</span>,</span>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a>  <span class="st">&quot;35&quot;</span> <span class="ot">=</span> <span class="st">&quot;3.5&quot;</span>,    <span class="st">&quot;36&quot;</span> <span class="ot">=</span> <span class="st">&quot;3.6&quot;</span>,    <span class="st">&quot;37&quot;</span> <span class="ot">=</span> <span class="st">&quot;3.7&quot;</span>,    <span class="st">&quot;38&quot;</span> <span class="ot">=</span> <span class="st">&quot;3.8&quot;</span>,    <span class="st">&quot;39&quot;</span> <span class="ot">=</span> <span class="st">&quot;3.9&quot;</span>,</span>
+<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a>  <span class="st">&quot;40&quot;</span> <span class="ot">=</span> <span class="st">&quot;4&quot;</span>,      <span class="st">&quot;41&quot;</span> <span class="ot">=</span> <span class="st">&quot;4.1&quot;</span>,    <span class="st">&quot;42&quot;</span> <span class="ot">=</span> <span class="st">&quot;4.2&quot;</span>,    <span class="st">&quot;43&quot;</span> <span class="ot">=</span> <span class="st">&quot;4.3&quot;</span>,    <span class="st">&quot;44&quot;</span> <span class="ot">=</span> <span class="st">&quot;4.4&quot;</span>,</span>
+<span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a>  <span class="st">&quot;45&quot;</span> <span class="ot">=</span> <span class="st">&quot;4.5&quot;</span>,    <span class="st">&quot;46&quot;</span> <span class="ot">=</span> <span class="st">&quot;4.6&quot;</span>,    <span class="st">&quot;47&quot;</span> <span class="ot">=</span> <span class="st">&quot;4.7&quot;</span>,    <span class="st">&quot;48&quot;</span> <span class="ot">=</span> <span class="st">&quot;4.8&quot;</span>,    <span class="st">&quot;49&quot;</span> <span class="ot">=</span> <span class="st">&quot;4.9&quot;</span>,</span>
+<span id="cb1-13"><a href="#cb1-13" tabindex="-1"></a>  <span class="st">&quot;50&quot;</span> <span class="ot">=</span> <span class="st">&quot;5&quot;</span>,      </span>
+<span id="cb1-14"><a href="#cb1-14" tabindex="-1"></a>  <span class="co"># 51-55: Not used</span></span>
+<span id="cb1-15"><a href="#cb1-15" tabindex="-1"></a>  <span class="st">&quot;56&quot;</span> <span class="ot">=</span> <span class="st">&quot;6&quot;</span>,      <span class="st">&quot;57&quot;</span> <span class="ot">=</span> <span class="st">&quot;7&quot;</span>,      <span class="st">&quot;58&quot;</span> <span class="ot">=</span> <span class="st">&quot;8&quot;</span>,      <span class="st">&quot;59&quot;</span> <span class="ot">=</span> <span class="st">&quot;9&quot;</span>,      <span class="st">&quot;60&quot;</span> <span class="ot">=</span> <span class="st">&quot;10&quot;</span>,</span>
+<span id="cb1-16"><a href="#cb1-16" tabindex="-1"></a>  <span class="st">&quot;61&quot;</span> <span class="ot">=</span> <span class="st">&quot;11&quot;</span>,     <span class="st">&quot;62&quot;</span> <span class="ot">=</span> <span class="st">&quot;12&quot;</span>,     <span class="st">&quot;63&quot;</span> <span class="ot">=</span> <span class="st">&quot;13&quot;</span>,     <span class="st">&quot;64&quot;</span> <span class="ot">=</span> <span class="st">&quot;14&quot;</span>,     <span class="st">&quot;65&quot;</span> <span class="ot">=</span> <span class="st">&quot;15&quot;</span>,</span>
+<span id="cb1-17"><a href="#cb1-17" tabindex="-1"></a>  <span class="st">&quot;66&quot;</span> <span class="ot">=</span> <span class="st">&quot;16&quot;</span>,     <span class="st">&quot;67&quot;</span> <span class="ot">=</span> <span class="st">&quot;17&quot;</span>,     <span class="st">&quot;68&quot;</span> <span class="ot">=</span> <span class="st">&quot;18&quot;</span>,     <span class="st">&quot;69&quot;</span> <span class="ot">=</span> <span class="st">&quot;19&quot;</span>,     <span class="st">&quot;70&quot;</span> <span class="ot">=</span> <span class="st">&quot;20&quot;</span>,</span>
+<span id="cb1-18"><a href="#cb1-18" tabindex="-1"></a>  <span class="st">&quot;71&quot;</span> <span class="ot">=</span> <span class="st">&quot;21&quot;</span>,     <span class="st">&quot;72&quot;</span> <span class="ot">=</span> <span class="st">&quot;22&quot;</span>,     <span class="st">&quot;73&quot;</span> <span class="ot">=</span> <span class="st">&quot;23&quot;</span>,     <span class="st">&quot;74&quot;</span> <span class="ot">=</span> <span class="st">&quot;24&quot;</span>,     <span class="st">&quot;75&quot;</span> <span class="ot">=</span> <span class="st">&quot;25&quot;</span>,</span>
+<span id="cb1-19"><a href="#cb1-19" tabindex="-1"></a>  <span class="st">&quot;76&quot;</span> <span class="ot">=</span> <span class="st">&quot;26&quot;</span>,     <span class="st">&quot;77&quot;</span> <span class="ot">=</span> <span class="st">&quot;27&quot;</span>,     <span class="st">&quot;78&quot;</span> <span class="ot">=</span> <span class="st">&quot;28&quot;</span>,     <span class="st">&quot;79&quot;</span> <span class="ot">=</span> <span class="st">&quot;29&quot;</span>,     <span class="st">&quot;80&quot;</span> <span class="ot">=</span> <span class="st">&quot;30&quot;</span>,</span>
+<span id="cb1-20"><a href="#cb1-20" tabindex="-1"></a>  <span class="st">&quot;81&quot;</span> <span class="ot">=</span> <span class="st">&quot;35&quot;</span>,     <span class="st">&quot;82&quot;</span> <span class="ot">=</span> <span class="st">&quot;40&quot;</span>,     <span class="st">&quot;83&quot;</span> <span class="ot">=</span> <span class="st">&quot;45&quot;</span>,     <span class="st">&quot;84&quot;</span> <span class="ot">=</span> <span class="st">&quot;50&quot;</span>,     <span class="st">&quot;85&quot;</span> <span class="ot">=</span> <span class="st">&quot;55&quot;</span>,</span>
+<span id="cb1-21"><a href="#cb1-21" tabindex="-1"></a>  <span class="st">&quot;86&quot;</span> <span class="ot">=</span> <span class="st">&quot;60&quot;</span>,     <span class="st">&quot;87&quot;</span> <span class="ot">=</span> <span class="st">&quot;65&quot;</span>,     <span class="st">&quot;88&quot;</span> <span class="ot">=</span> <span class="st">&quot;70&quot;</span>,     <span class="st">&quot;89&quot;</span> <span class="ot">=</span> <span class="st">&quot;&gt; 70&quot;</span>,</span>
+<span id="cb1-22"><a href="#cb1-22" tabindex="-1"></a>  <span class="st">&quot;90&quot;</span> <span class="ot">=</span> <span class="st">&quot;&lt; 0.05&quot;</span>, <span class="st">&quot;91&quot;</span> <span class="ot">=</span> <span class="st">&quot;0.05&quot;</span>,   <span class="st">&quot;92&quot;</span> <span class="ot">=</span> <span class="st">&quot;0.2&quot;</span>,    <span class="st">&quot;93&quot;</span> <span class="ot">=</span> <span class="st">&quot;0.5&quot;</span>,    <span class="st">&quot;94&quot;</span> <span class="ot">=</span> <span class="st">&quot;1&quot;</span>,</span>
+<span id="cb1-23"><a href="#cb1-23" tabindex="-1"></a>  <span class="st">&quot;95&quot;</span> <span class="ot">=</span> <span class="st">&quot;2&quot;</span>,      <span class="st">&quot;96&quot;</span> <span class="ot">=</span> <span class="st">&quot;4&quot;</span>,      <span class="st">&quot;97&quot;</span> <span class="ot">=</span> <span class="st">&quot;10&quot;</span>,     <span class="st">&quot;98&quot;</span> <span class="ot">=</span> <span class="st">&quot;20&quot;</span>,     <span class="st">&quot;99&quot;</span> <span class="ot">=</span> <span class="st">&quot;&gt;= 50&quot;</span></span>
+<span id="cb1-24"><a href="#cb1-24" tabindex="-1"></a>)</span>
+<span id="cb1-25"><a href="#cb1-25" tabindex="-1"></a></span>
+<span id="cb1-26"><a href="#cb1-26" tabindex="-1"></a><span class="co"># Example</span></span>
+<span id="cb1-27"><a href="#cb1-27" tabindex="-1"></a>user_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Visibilities =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">91</span>, <span class="dv">58</span>, <span class="dv">5</span>))</span>
+<span id="cb1-28"><a href="#cb1-28" tabindex="-1"></a>codes_formatted <span class="ot">&lt;-</span> <span class="fu">sprintf</span>(<span class="st">&quot;%02d&quot;</span>, user_data<span class="sc">$</span>Visibilities) <span class="co"># &quot;00&quot;, &quot;05&quot;, &quot;58&quot;, &quot;91&quot;</span></span>
+<span id="cb1-29"><a href="#cb1-29" tabindex="-1"></a>user_data<span class="sc">$</span>Visibilities <span class="ot">&lt;-</span> visibility_codes[codes_formatted]</span>
+<span id="cb1-30"><a href="#cb1-30" tabindex="-1"></a>user_data</span>
+<span id="cb1-31"><a href="#cb1-31" tabindex="-1"></a><span class="co">#&gt;   Visibilities</span></span>
+<span id="cb1-32"><a href="#cb1-32" tabindex="-1"></a><span class="co">#&gt; 1        &lt; 0.1</span></span>
+<span id="cb1-33"><a href="#cb1-33" tabindex="-1"></a><span class="co">#&gt; 2         0.05</span></span>
+<span id="cb1-34"><a href="#cb1-34" tabindex="-1"></a><span class="co">#&gt; 3            8</span></span>
+<span id="cb1-35"><a href="#cb1-35" tabindex="-1"></a><span class="co">#&gt; 4          0.5</span></span></code></pre></div>
+</div>
+<div id="lowest-cloud-base-height" class="section level2">
+<h2>Lowest cloud base height</h2>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="co"># From Code Table 1600</span></span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>cloud_height_codes <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>  <span class="st">&quot;0&quot;</span> <span class="ot">=</span> <span class="st">&quot;0 to 50 m&quot;</span>,</span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>  <span class="st">&quot;1&quot;</span> <span class="ot">=</span> <span class="st">&quot;50 to 100 m&quot;</span>,</span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>  <span class="st">&quot;2&quot;</span> <span class="ot">=</span> <span class="st">&quot;100 to 200 m&quot;</span>,</span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a>  <span class="st">&quot;3&quot;</span> <span class="ot">=</span> <span class="st">&quot;200 to 300 m&quot;</span>,</span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a>  <span class="st">&quot;4&quot;</span> <span class="ot">=</span> <span class="st">&quot;300 to 600 m&quot;</span>,</span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a>  <span class="st">&quot;5&quot;</span> <span class="ot">=</span> <span class="st">&quot;600 to 1 000 m&quot;</span>,</span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a>  <span class="st">&quot;6&quot;</span> <span class="ot">=</span> <span class="st">&quot;1 000 to 1 500 m&quot;</span>,</span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a>  <span class="st">&quot;7&quot;</span> <span class="ot">=</span> <span class="st">&quot;1 500 to 2 000 m&quot;</span>,</span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a>  <span class="st">&quot;8&quot;</span> <span class="ot">=</span> <span class="st">&quot;2 000 to 2 500 m&quot;</span>,</span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a>  <span class="st">&quot;9&quot;</span> <span class="ot">=</span> <span class="st">&quot;2 500 m or more, or no clouds&quot;</span>,</span>
+<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a>  <span class="st">&quot;/&quot;</span> <span class="ot">=</span> <span class="st">&quot;Height of base of cloud not known&quot;</span></span>
+<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a>)</span></code></pre></div>
+</div>
+<div id="present-weather-this-is-a-large-one---for-manned-stations" class="section level2">
+<h2>Present weather (this is a large one!) - for manned stations</h2>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="co"># From Code Table 4677</span></span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>present_weather <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>  <span class="st">&quot;00&quot;</span> <span class="ot">=</span> <span class="st">&quot;Cloud development not observed or not observable&quot;</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>  <span class="st">&quot;01&quot;</span> <span class="ot">=</span> <span class="st">&quot;Clouds generally dissolving or becoming less developed&quot;</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>  <span class="st">&quot;02&quot;</span> <span class="ot">=</span> <span class="st">&quot;State of sky on the whole unchanged&quot;</span>,</span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>  <span class="st">&quot;03&quot;</span> <span class="ot">=</span> <span class="st">&quot;Clouds generally forming or developing&quot;</span>,</span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>  <span class="st">&quot;04&quot;</span> <span class="ot">=</span> <span class="st">&quot;Visibility reduced by smoke, e.g. veldt or forest fires, industrial smoke or volcanic ashes&quot;</span>,</span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a>  <span class="st">&quot;05&quot;</span> <span class="ot">=</span> <span class="st">&quot;Haze&quot;</span>,</span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a>  <span class="st">&quot;06&quot;</span> <span class="ot">=</span> <span class="st">&quot;Widespread dust in suspension in the air, not raised by wind at or near the station at the time of observation&quot;</span>,</span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a>  <span class="st">&quot;07&quot;</span> <span class="ot">=</span> <span class="st">&quot;Dust or sand raised by wind at or near the station at the time of observation, but no well-developed dust whirl(s) or sand whirl(s), and no duststorm or sandstorm seen; or, in the case of ships, blowing spray at the station&quot;</span>,</span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a>  <span class="st">&quot;08&quot;</span> <span class="ot">=</span> <span class="st">&quot;Well-developed dust whirl(s) or sand whirl(s) seen at or near the station during the preceding hour or at the time of observation, but no duststorm or sandstorm&quot;</span>,</span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a>  <span class="st">&quot;09&quot;</span> <span class="ot">=</span> <span class="st">&quot;Duststorm or sandstorm within sight at the time of observation, or at the station during the preceding hour&quot;</span>,</span>
+<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a>  <span class="st">&quot;10&quot;</span> <span class="ot">=</span> <span class="st">&quot;Mist&quot;</span>,</span>
+<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a>  <span class="st">&quot;11&quot;</span> <span class="ot">=</span> <span class="st">&quot;Patches of shallow fog or ice fog at the station, whether on land or sea, not deeper than about 2 metres on land or 10 metres at sea&quot;</span>,</span>
+<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a>  <span class="st">&quot;12&quot;</span> <span class="ot">=</span> <span class="st">&quot;More or less continuous shallow fog or ice fog at the station, whether on land or sea, not deeper than about 2 metres on land or 10 metres at sea&quot;</span>,</span>
+<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a>  <span class="st">&quot;13&quot;</span> <span class="ot">=</span> <span class="st">&quot;Lightning visible, no thunder heard&quot;</span>,</span>
+<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a>  <span class="st">&quot;14&quot;</span> <span class="ot">=</span> <span class="st">&quot;Precipitation within sight, not reaching the ground or the surface of the sea&quot;</span>,</span>
+<span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a>  <span class="st">&quot;15&quot;</span> <span class="ot">=</span> <span class="st">&quot;Precipitation within sight, reaching the ground or the surface of the sea, but distant, i.e. estimated to be more than 5 km from the station&quot;</span>,</span>
+<span id="cb3-19"><a href="#cb3-19" tabindex="-1"></a>  <span class="st">&quot;16&quot;</span> <span class="ot">=</span> <span class="st">&quot;Precipitation within sight, reaching the ground or the surface of the sea, near to, but not at the station&quot;</span>,</span>
+<span id="cb3-20"><a href="#cb3-20" tabindex="-1"></a>  <span class="st">&quot;17&quot;</span> <span class="ot">=</span> <span class="st">&quot;Thunderstorm, but no precipitation at the time of observation&quot;</span>,</span>
+<span id="cb3-21"><a href="#cb3-21" tabindex="-1"></a>  <span class="st">&quot;18&quot;</span> <span class="ot">=</span> <span class="st">&quot;Squalls at or within sight of the station during the preceding hour or at the time of observation&quot;</span>,</span>
+<span id="cb3-22"><a href="#cb3-22" tabindex="-1"></a>  <span class="st">&quot;19&quot;</span> <span class="ot">=</span> <span class="st">&quot;Funnel cloud(s) at or within sight of the station during the preceding hour or at the time of observation&quot;</span>,</span>
+<span id="cb3-23"><a href="#cb3-23" tabindex="-1"></a>  <span class="st">&quot;20&quot;</span> <span class="ot">=</span> <span class="st">&quot;Drizzle (not freezing) or snow grains not falling as shower(s)&quot;</span>,</span>
+<span id="cb3-24"><a href="#cb3-24" tabindex="-1"></a>  <span class="st">&quot;21&quot;</span> <span class="ot">=</span> <span class="st">&quot;Rain (not freezing) not falling as shower(s)&quot;</span>,</span>
+<span id="cb3-25"><a href="#cb3-25" tabindex="-1"></a>  <span class="st">&quot;22&quot;</span> <span class="ot">=</span> <span class="st">&quot;Snow not falling as shower(s)&quot;</span>,</span>
+<span id="cb3-26"><a href="#cb3-26" tabindex="-1"></a>  <span class="st">&quot;23&quot;</span> <span class="ot">=</span> <span class="st">&quot;Rain and snow or ice pellets not falling as shower(s)&quot;</span>,</span>
+<span id="cb3-27"><a href="#cb3-27" tabindex="-1"></a>  <span class="st">&quot;24&quot;</span> <span class="ot">=</span> <span class="st">&quot;Freezing drizzle or freezing rain not falling as shower(s)&quot;</span>,</span>
+<span id="cb3-28"><a href="#cb3-28" tabindex="-1"></a>  <span class="st">&quot;25&quot;</span> <span class="ot">=</span> <span class="st">&quot;Shower(s) of rain&quot;</span>,</span>
+<span id="cb3-29"><a href="#cb3-29" tabindex="-1"></a>  <span class="st">&quot;26&quot;</span> <span class="ot">=</span> <span class="st">&quot;Shower(s) of snow, or of rain and snow&quot;</span>,</span>
+<span id="cb3-30"><a href="#cb3-30" tabindex="-1"></a>  <span class="st">&quot;27&quot;</span> <span class="ot">=</span> <span class="st">&quot;Shower(s) of hail, or of rain and hail&quot;</span>,</span>
+<span id="cb3-31"><a href="#cb3-31" tabindex="-1"></a>  <span class="st">&quot;28&quot;</span> <span class="ot">=</span> <span class="st">&quot;Fog or ice fog&quot;</span>,</span>
+<span id="cb3-32"><a href="#cb3-32" tabindex="-1"></a>  <span class="st">&quot;29&quot;</span> <span class="ot">=</span> <span class="st">&quot;Thunderstorm (with or without precipitation)&quot;</span>,</span>
+<span id="cb3-33"><a href="#cb3-33" tabindex="-1"></a>  <span class="st">&quot;30&quot;</span> <span class="ot">=</span> <span class="st">&quot;Slight or moderate duststorm or sandstorm - has decreased during the preceding hour&quot;</span>,</span>
+<span id="cb3-34"><a href="#cb3-34" tabindex="-1"></a>  <span class="st">&quot;31&quot;</span> <span class="ot">=</span> <span class="st">&quot;Slight or moderate duststorm or sandstorm - no appreciable change during the preceding hour&quot;</span>,</span>
+<span id="cb3-35"><a href="#cb3-35" tabindex="-1"></a>  <span class="st">&quot;32&quot;</span> <span class="ot">=</span> <span class="st">&quot;Slight or moderate duststorm or sandstorm - has begun or has increased during the preceding hour&quot;</span>,</span>
+<span id="cb3-36"><a href="#cb3-36" tabindex="-1"></a>  <span class="st">&quot;33&quot;</span> <span class="ot">=</span> <span class="st">&quot;Severe duststorm or sandstorm - has decreased during the preceding hour&quot;</span>,</span>
+<span id="cb3-37"><a href="#cb3-37" tabindex="-1"></a>  <span class="st">&quot;34&quot;</span> <span class="ot">=</span> <span class="st">&quot;Severe duststorm or sandstorm - no appreciable change during the preceding hour&quot;</span>,</span>
+<span id="cb3-38"><a href="#cb3-38" tabindex="-1"></a>  <span class="st">&quot;35&quot;</span> <span class="ot">=</span> <span class="st">&quot;Severe duststorm or sandstorm - has begun or has increased during the preceding hour&quot;</span>,</span>
+<span id="cb3-39"><a href="#cb3-39" tabindex="-1"></a>  <span class="st">&quot;36&quot;</span> <span class="ot">=</span> <span class="st">&quot;Slight or moderate drifting snow (generally low below eye level)&quot;</span>,</span>
+<span id="cb3-40"><a href="#cb3-40" tabindex="-1"></a>  <span class="st">&quot;37&quot;</span> <span class="ot">=</span> <span class="st">&quot;Heavy drifting snow (generally low below eye level)&quot;</span>,</span>
+<span id="cb3-41"><a href="#cb3-41" tabindex="-1"></a>  <span class="st">&quot;38&quot;</span> <span class="ot">=</span> <span class="st">&quot;Slight or moderate blowing snow (generally high above eye level)&quot;</span>,</span>
+<span id="cb3-42"><a href="#cb3-42" tabindex="-1"></a>  <span class="st">&quot;39&quot;</span> <span class="ot">=</span> <span class="st">&quot;Heavy blowing snow (generally high above eye level)&quot;</span>,</span>
+<span id="cb3-43"><a href="#cb3-43" tabindex="-1"></a>  <span class="st">&quot;40&quot;</span> <span class="ot">=</span> <span class="st">&quot;Fog or ice fog at a distance at the time of observation, but not at the station during the preceding hour, the fog or ice fog extending to a level above that of the observer&quot;</span>,</span>
+<span id="cb3-44"><a href="#cb3-44" tabindex="-1"></a>  <span class="st">&quot;41&quot;</span> <span class="ot">=</span> <span class="st">&quot;Fog or ice fog in patches&quot;</span>,</span>
+<span id="cb3-45"><a href="#cb3-45" tabindex="-1"></a>  <span class="st">&quot;42&quot;</span> <span class="ot">=</span> <span class="st">&quot;Fog or ice fog, sky visible - has become thinner during the preceding hour&quot;</span>,</span>
+<span id="cb3-46"><a href="#cb3-46" tabindex="-1"></a>  <span class="st">&quot;43&quot;</span> <span class="ot">=</span> <span class="st">&quot;Fog or ice fog, sky invisible - has become thinner during the preceding hour&quot;</span>,</span>
+<span id="cb3-47"><a href="#cb3-47" tabindex="-1"></a>  <span class="st">&quot;44&quot;</span> <span class="ot">=</span> <span class="st">&quot;Fog or ice fog, sky visible - no appreciable change during the preceding hour&quot;</span>,</span>
+<span id="cb3-48"><a href="#cb3-48" tabindex="-1"></a>  <span class="st">&quot;45&quot;</span> <span class="ot">=</span> <span class="st">&quot;Fog or ice fog, sky invisible - no appreciable change during the preceding hour&quot;</span>,</span>
+<span id="cb3-49"><a href="#cb3-49" tabindex="-1"></a>  <span class="st">&quot;46&quot;</span> <span class="ot">=</span> <span class="st">&quot;Fog or ice fog, sky visible - has begun or has become thicker during the preceding hour&quot;</span>,</span>
+<span id="cb3-50"><a href="#cb3-50" tabindex="-1"></a>  <span class="st">&quot;47&quot;</span> <span class="ot">=</span> <span class="st">&quot;Fog or ice fog, sky invisible - has begun or has become thicker during the preceding hour&quot;</span>,</span>
+<span id="cb3-51"><a href="#cb3-51" tabindex="-1"></a>  <span class="st">&quot;48&quot;</span> <span class="ot">=</span> <span class="st">&quot;Fog, depositing rime, sky visible&quot;</span>,</span>
+<span id="cb3-52"><a href="#cb3-52" tabindex="-1"></a>  <span class="st">&quot;49&quot;</span> <span class="ot">=</span> <span class="st">&quot;Fog, depositing rime, sky invisible&quot;</span>,</span>
+<span id="cb3-53"><a href="#cb3-53" tabindex="-1"></a>  <span class="st">&quot;50&quot;</span> <span class="ot">=</span> <span class="st">&quot;Drizzle, not freezing, intermittent, slight at time of observation&quot;</span>,</span>
+<span id="cb3-54"><a href="#cb3-54" tabindex="-1"></a>  <span class="st">&quot;51&quot;</span> <span class="ot">=</span> <span class="st">&quot;Drizzle, not freezing, continuous, slight at time of observation&quot;</span>,</span>
+<span id="cb3-55"><a href="#cb3-55" tabindex="-1"></a>  <span class="st">&quot;52&quot;</span> <span class="ot">=</span> <span class="st">&quot;Drizzle, not freezing, intermittent, moderate at time of observation&quot;</span>,</span>
+<span id="cb3-56"><a href="#cb3-56" tabindex="-1"></a>  <span class="st">&quot;53&quot;</span> <span class="ot">=</span> <span class="st">&quot;Drizzle, not freezing, continuous, moderate at time of observation&quot;</span>,</span>
+<span id="cb3-57"><a href="#cb3-57" tabindex="-1"></a>  <span class="st">&quot;54&quot;</span> <span class="ot">=</span> <span class="st">&quot;Drizzle, not freezing, intermittent, heavy (dense) at time of observation&quot;</span>,</span>
+<span id="cb3-58"><a href="#cb3-58" tabindex="-1"></a>  <span class="st">&quot;55&quot;</span> <span class="ot">=</span> <span class="st">&quot;Drizzle, not freezing, continuous, heavy (dense) at time of observation&quot;</span>,</span>
+<span id="cb3-59"><a href="#cb3-59" tabindex="-1"></a>  <span class="st">&quot;56&quot;</span> <span class="ot">=</span> <span class="st">&quot;Drizzle, freezing, slight&quot;</span>,</span>
+<span id="cb3-60"><a href="#cb3-60" tabindex="-1"></a>  <span class="st">&quot;57&quot;</span> <span class="ot">=</span> <span class="st">&quot;Drizzle, freezing, moderate or heavy (dense)&quot;</span>,</span>
+<span id="cb3-61"><a href="#cb3-61" tabindex="-1"></a>  <span class="st">&quot;58&quot;</span> <span class="ot">=</span> <span class="st">&quot;Drizzle and rain, slight&quot;</span>,</span>
+<span id="cb3-62"><a href="#cb3-62" tabindex="-1"></a>  <span class="st">&quot;59&quot;</span> <span class="ot">=</span> <span class="st">&quot;Drizzle and rain, moderate or heavy&quot;</span>,</span>
+<span id="cb3-63"><a href="#cb3-63" tabindex="-1"></a>  <span class="st">&quot;60&quot;</span> <span class="ot">=</span> <span class="st">&quot;Rain, not freezing, intermittent, slight at time of observation&quot;</span>,</span>
+<span id="cb3-64"><a href="#cb3-64" tabindex="-1"></a>  <span class="st">&quot;61&quot;</span> <span class="ot">=</span> <span class="st">&quot;Rain, not freezing, continuous, slight at time of observation&quot;</span>,</span>
+<span id="cb3-65"><a href="#cb3-65" tabindex="-1"></a>  <span class="st">&quot;62&quot;</span> <span class="ot">=</span> <span class="st">&quot;Rain, not freezing, intermittent, moderate at time of observation&quot;</span>,</span>
+<span id="cb3-66"><a href="#cb3-66" tabindex="-1"></a>  <span class="st">&quot;63&quot;</span> <span class="ot">=</span> <span class="st">&quot;Rain, not freezing, continuous, moderate at time of observation&quot;</span>,</span>
+<span id="cb3-67"><a href="#cb3-67" tabindex="-1"></a>  <span class="st">&quot;64&quot;</span> <span class="ot">=</span> <span class="st">&quot;Rain, not freezing, intermittent, heavy at time of observation&quot;</span>,</span>
+<span id="cb3-68"><a href="#cb3-68" tabindex="-1"></a>  <span class="st">&quot;65&quot;</span> <span class="ot">=</span> <span class="st">&quot;Rain, not freezing, continuous, heavy at time of observation&quot;</span>,</span>
+<span id="cb3-69"><a href="#cb3-69" tabindex="-1"></a>  <span class="st">&quot;66&quot;</span> <span class="ot">=</span> <span class="st">&quot;Rain, freezing, slight&quot;</span>,</span>
+<span id="cb3-70"><a href="#cb3-70" tabindex="-1"></a>  <span class="st">&quot;67&quot;</span> <span class="ot">=</span> <span class="st">&quot;Rain, freezing, moderate or heavy (dense)&quot;</span>,</span>
+<span id="cb3-71"><a href="#cb3-71" tabindex="-1"></a>  <span class="st">&quot;68&quot;</span> <span class="ot">=</span> <span class="st">&quot;Rain or drizzle and snow, slight&quot;</span>,</span>
+<span id="cb3-72"><a href="#cb3-72" tabindex="-1"></a>  <span class="st">&quot;69&quot;</span> <span class="ot">=</span> <span class="st">&quot;Rain or drizzle and snow, moderate or heavy&quot;</span>,</span>
+<span id="cb3-73"><a href="#cb3-73" tabindex="-1"></a>  <span class="st">&quot;70&quot;</span> <span class="ot">=</span> <span class="st">&quot;Intermittent fall of snowflakes, slight at time of observation&quot;</span>,</span>
+<span id="cb3-74"><a href="#cb3-74" tabindex="-1"></a>  <span class="st">&quot;71&quot;</span> <span class="ot">=</span> <span class="st">&quot;Continuous fall of snowflakes, slight at time of observation&quot;</span>,</span>
+<span id="cb3-75"><a href="#cb3-75" tabindex="-1"></a>  <span class="st">&quot;72&quot;</span> <span class="ot">=</span> <span class="st">&quot;Intermittent fall of snowflakes, moderate at time of observation&quot;</span>,</span>
+<span id="cb3-76"><a href="#cb3-76" tabindex="-1"></a>  <span class="st">&quot;73&quot;</span> <span class="ot">=</span> <span class="st">&quot;Continuous fall of snowflakes, moderate at time of observation&quot;</span>,</span>
+<span id="cb3-77"><a href="#cb3-77" tabindex="-1"></a>  <span class="st">&quot;74&quot;</span> <span class="ot">=</span> <span class="st">&quot;Intermittent fall of snowflakes, heavy at time of observation&quot;</span>,</span>
+<span id="cb3-78"><a href="#cb3-78" tabindex="-1"></a>  <span class="st">&quot;75&quot;</span> <span class="ot">=</span> <span class="st">&quot;Continuous fall of snowflakes, heavy at time of observation&quot;</span>,</span>
+<span id="cb3-79"><a href="#cb3-79" tabindex="-1"></a>  <span class="st">&quot;76&quot;</span> <span class="ot">=</span> <span class="st">&quot;Diamond dust (with or without fog)&quot;</span>,</span>
+<span id="cb3-80"><a href="#cb3-80" tabindex="-1"></a>  <span class="st">&quot;77&quot;</span> <span class="ot">=</span> <span class="st">&quot;Snow grains (with or without fog)&quot;</span>,</span>
+<span id="cb3-81"><a href="#cb3-81" tabindex="-1"></a>  <span class="st">&quot;78&quot;</span> <span class="ot">=</span> <span class="st">&quot;Isolated star-like snow crystals (with or without fog)&quot;</span>,</span>
+<span id="cb3-82"><a href="#cb3-82" tabindex="-1"></a>  <span class="st">&quot;79&quot;</span> <span class="ot">=</span> <span class="st">&quot;Ice pellets&quot;</span>,</span>
+<span id="cb3-83"><a href="#cb3-83" tabindex="-1"></a>  <span class="st">&quot;80&quot;</span> <span class="ot">=</span> <span class="st">&quot;Rain shower(s), slight&quot;</span>,</span>
+<span id="cb3-84"><a href="#cb3-84" tabindex="-1"></a>  <span class="st">&quot;81&quot;</span> <span class="ot">=</span> <span class="st">&quot;Rain shower(s), moderate or heavy&quot;</span>,</span>
+<span id="cb3-85"><a href="#cb3-85" tabindex="-1"></a>  <span class="st">&quot;82&quot;</span> <span class="ot">=</span> <span class="st">&quot;Rain shower(s), violent&quot;</span>,</span>
+<span id="cb3-86"><a href="#cb3-86" tabindex="-1"></a>  <span class="st">&quot;83&quot;</span> <span class="ot">=</span> <span class="st">&quot;Shower(s) of rain and snow mixed, slight&quot;</span>,</span>
+<span id="cb3-87"><a href="#cb3-87" tabindex="-1"></a>  <span class="st">&quot;84&quot;</span> <span class="ot">=</span> <span class="st">&quot;Shower(s) of rain and snow mixed, moderate or heavy&quot;</span>,</span>
+<span id="cb3-88"><a href="#cb3-88" tabindex="-1"></a>  <span class="st">&quot;85&quot;</span> <span class="ot">=</span> <span class="st">&quot;Snow shower(s), slight&quot;</span>,</span>
+<span id="cb3-89"><a href="#cb3-89" tabindex="-1"></a>  <span class="st">&quot;86&quot;</span> <span class="ot">=</span> <span class="st">&quot;Snow shower(s), moderate or heavy&quot;</span>,</span>
+<span id="cb3-90"><a href="#cb3-90" tabindex="-1"></a>  <span class="st">&quot;87&quot;</span> <span class="ot">=</span> <span class="st">&quot;Shower(s) of snow pellets or small hail, with or without rain or rain and snow mixed - slight&quot;</span>,</span>
+<span id="cb3-91"><a href="#cb3-91" tabindex="-1"></a>  <span class="st">&quot;88&quot;</span> <span class="ot">=</span> <span class="st">&quot;Shower(s) of snow pellets or small hail, with or without rain or rain and snow mixed - moderate or heavy&quot;</span>,</span>
+<span id="cb3-92"><a href="#cb3-92" tabindex="-1"></a>  <span class="st">&quot;89&quot;</span> <span class="ot">=</span> <span class="st">&quot;Shower(s) of hail, with or without rain or rain and snow mixed, not associated with thunder - slight&quot;</span>,</span>
+<span id="cb3-93"><a href="#cb3-93" tabindex="-1"></a>  <span class="st">&quot;90&quot;</span> <span class="ot">=</span> <span class="st">&quot;Shower(s) of hail, with or without rain or rain and snow mixed, not associated with thunder - moderate or heavy&quot;</span>,</span>
+<span id="cb3-94"><a href="#cb3-94" tabindex="-1"></a>  <span class="st">&quot;91&quot;</span> <span class="ot">=</span> <span class="st">&quot;Slight rain at time of observation - thunderstorm during the preceding hour but not at time of observation&quot;</span>,</span>
+<span id="cb3-95"><a href="#cb3-95" tabindex="-1"></a>  <span class="st">&quot;92&quot;</span> <span class="ot">=</span> <span class="st">&quot;Moderate or heavy rain at time of observation - thunderstorm during the preceding hour&quot;</span>,</span>
+<span id="cb3-96"><a href="#cb3-96" tabindex="-1"></a>  <span class="st">&quot;93&quot;</span> <span class="ot">=</span> <span class="st">&quot;Slight snow, or rain and snow mixed or hail at time of observation - thunderstorm during the preceding hour but not at time of observation&quot;</span>,</span>
+<span id="cb3-97"><a href="#cb3-97" tabindex="-1"></a>  <span class="st">&quot;94&quot;</span> <span class="ot">=</span> <span class="st">&quot;Moderate or heavy snow, or rain and snow mixed or hail at time of observation - thunderstorm during the preceding hour but not at time of observation&quot;</span>,</span>
+<span id="cb3-98"><a href="#cb3-98" tabindex="-1"></a>  <span class="st">&quot;95&quot;</span> <span class="ot">=</span> <span class="st">&quot;Thunderstorm, slight or moderate, without hail, but with rain and/or snow at time of observation&quot;</span>,</span>
+<span id="cb3-99"><a href="#cb3-99" tabindex="-1"></a>  <span class="st">&quot;96&quot;</span> <span class="ot">=</span> <span class="st">&quot;Thunderstorm, slight or moderate, with hail at time of observation&quot;</span>,</span>
+<span id="cb3-100"><a href="#cb3-100" tabindex="-1"></a>  <span class="st">&quot;97&quot;</span> <span class="ot">=</span> <span class="st">&quot;Thunderstorm, heavy, without hail, but with rain and/or snow at time of observation&quot;</span>,</span>
+<span id="cb3-101"><a href="#cb3-101" tabindex="-1"></a>  <span class="st">&quot;98&quot;</span> <span class="ot">=</span> <span class="st">&quot;Thunderstorm combined with duststorm or sandstorm at time of observation&quot;</span>,</span>
+<span id="cb3-102"><a href="#cb3-102" tabindex="-1"></a>  <span class="st">&quot;99&quot;</span> <span class="ot">=</span> <span class="st">&quot;Thunderstorm, heavy, with hail at time of observation&quot;</span></span>
+<span id="cb3-103"><a href="#cb3-103" tabindex="-1"></a>)</span></code></pre></div>
+</div>
+<div id="past-weather" class="section level2">
+<h2>Past weather</h2>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="co"># From Code Table 4561</span></span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>past_weather <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>  <span class="st">&quot;0&quot;</span> <span class="ot">=</span> <span class="st">&quot;Cloud covering 1/2 or less of the sky throughout the appropriate period&quot;</span>,</span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>  <span class="st">&quot;1&quot;</span> <span class="ot">=</span> <span class="st">&quot;Cloud covering more than 1/2 of the sky during part of the appropriate period and covering 1/2 or less during part of the period&quot;</span>,</span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>  <span class="st">&quot;2&quot;</span> <span class="ot">=</span> <span class="st">&quot;Cloud covering more than 1/2 of the sky throughout the appropriate period&quot;</span>,</span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>  <span class="st">&quot;3&quot;</span> <span class="ot">=</span> <span class="st">&quot;Sandstorm, duststorm or blowing snow&quot;</span>,</span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a>  <span class="st">&quot;4&quot;</span> <span class="ot">=</span> <span class="st">&quot;Fog or ice fog or thick haze&quot;</span>,</span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a>  <span class="st">&quot;5&quot;</span> <span class="ot">=</span> <span class="st">&quot;Drizzle&quot;</span>,</span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a>  <span class="st">&quot;6&quot;</span> <span class="ot">=</span> <span class="st">&quot;Rain&quot;</span>,</span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a>  <span class="st">&quot;7&quot;</span> <span class="ot">=</span> <span class="st">&quot;Snow, or rain and snow mixed&quot;</span>,</span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a>  <span class="st">&quot;8&quot;</span> <span class="ot">=</span> <span class="st">&quot;Shower(s)&quot;</span>,</span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a>  <span class="st">&quot;9&quot;</span> <span class="ot">=</span> <span class="st">&quot;Thunderstorm(s) with or without precipitation&quot;</span></span>
+<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a>)</span></code></pre></div>
+</div>
+<div id="low-medium-and-high-cloud-description" class="section level2">
+<h2>Low, medium and high cloud description</h2>
+<blockquote>
+<p><strong>Important Note:</strong> The original Code Table use “/”
+instead of “10”.</p>
+</blockquote>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="co"># From Code Table 0513</span></span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>low_cloud_codes <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>  <span class="st">&quot;0&quot;</span> <span class="ot">=</span> <span class="st">&quot;No CL clouds&quot;</span>,</span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>  <span class="st">&quot;1&quot;</span> <span class="ot">=</span> <span class="st">&quot;Cumulus humilis or cumulus fractus other than of bad weather,* or both&quot;</span>,</span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>  <span class="st">&quot;2&quot;</span> <span class="ot">=</span> <span class="st">&quot;Cumulus mediocris or congestus, with or without cumulus of species fractus or humilis or stratocumulus, all having their bases at the same level&quot;</span>,</span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>  <span class="st">&quot;3&quot;</span> <span class="ot">=</span> <span class="st">&quot;Cumulonimbus calvus, with or without cumulus, stratocumulus or Stratus&quot;</span>,</span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a>  <span class="st">&quot;4&quot;</span> <span class="ot">=</span> <span class="st">&quot;Stratocumulus cumulogenitus&quot;</span>,</span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a>  <span class="st">&quot;5&quot;</span> <span class="ot">=</span> <span class="st">&quot;Stratocumulus other than stratocumulus cumulogenitus&quot;</span>,</span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a>  <span class="st">&quot;6&quot;</span> <span class="ot">=</span> <span class="st">&quot;Stratus nebulosus or Stratus fractus other than of bad weather,* or both&quot;</span>,</span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a>  <span class="st">&quot;7&quot;</span> <span class="ot">=</span> <span class="st">&quot;Stratus fractus or cumulus fractus of bad weather,* or both (pannus), usually below altostratus or nimbostratus&quot;</span>,</span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a>  <span class="st">&quot;8&quot;</span> <span class="ot">=</span> <span class="st">&quot;Cumulus and stratocumulus other than stratocumulus cumulogenitus, with bases at different levels&quot;</span>,</span>
+<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a>  <span class="st">&quot;9&quot;</span> <span class="ot">=</span> <span class="st">&quot;Cumulonimbus capillatus (often with an anvil), with or without cumulonimbus calvus, cumulus, stratocumulus, Stratus or pannus&quot;</span>,</span>
+<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a>  <span class="st">&quot;10&quot;</span> <span class="ot">=</span> <span class="st">&quot;CL clouds invisible owing to darkness, fog, blowing dust or sand, or other similar phenomena&quot;</span></span>
+<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a>)</span>
+<span id="cb5-15"><a href="#cb5-15" tabindex="-1"></a></span>
+<span id="cb5-16"><a href="#cb5-16" tabindex="-1"></a><span class="co"># From Code Table 0515</span></span>
+<span id="cb5-17"><a href="#cb5-17" tabindex="-1"></a>medium_cloud_codes <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb5-18"><a href="#cb5-18" tabindex="-1"></a>  <span class="st">&quot;0&quot;</span> <span class="ot">=</span> <span class="st">&quot;No CM clouds&quot;</span>,</span>
+<span id="cb5-19"><a href="#cb5-19" tabindex="-1"></a>  <span class="st">&quot;1&quot;</span> <span class="ot">=</span> <span class="st">&quot;Altostratus translucidus&quot;</span>,</span>
+<span id="cb5-20"><a href="#cb5-20" tabindex="-1"></a>  <span class="st">&quot;2&quot;</span> <span class="ot">=</span> <span class="st">&quot;Altostratus opacus or nimbostratus&quot;</span>,</span>
+<span id="cb5-21"><a href="#cb5-21" tabindex="-1"></a>  <span class="st">&quot;3&quot;</span> <span class="ot">=</span> <span class="st">&quot;Altocumulus translucidus at a single level&quot;</span>,</span>
+<span id="cb5-22"><a href="#cb5-22" tabindex="-1"></a>  <span class="st">&quot;4&quot;</span> <span class="ot">=</span> <span class="st">&quot;Patches (often lenticular) of altocumulus translucidus, continually changing and occurring at one or more levels&quot;</span>,</span>
+<span id="cb5-23"><a href="#cb5-23" tabindex="-1"></a>  <span class="st">&quot;5&quot;</span> <span class="ot">=</span> <span class="st">&quot;Altocumulus translucidus in bands, or one or more layers of altocumulus translucidus or opacus, progressively invading the sky; these altocumulus clouds generally thicken as a whole&quot;</span>,</span>
+<span id="cb5-24"><a href="#cb5-24" tabindex="-1"></a>  <span class="st">&quot;6&quot;</span> <span class="ot">=</span> <span class="st">&quot;Altocumulus cumulogenitus (or cumulonimbogenitus)&quot;</span>,</span>
+<span id="cb5-25"><a href="#cb5-25" tabindex="-1"></a>  <span class="st">&quot;7&quot;</span> <span class="ot">=</span> <span class="st">&quot;Altocumulus translucidus or opacus in two or more layers, or altocumulus opacus in a single layer, not progressively invading the sky, or altocumulus with altostratus or nimbostratus&quot;</span>,</span>
+<span id="cb5-26"><a href="#cb5-26" tabindex="-1"></a>  <span class="st">&quot;8&quot;</span> <span class="ot">=</span> <span class="st">&quot;Altocumulus castellanus or floccus&quot;</span>,</span>
+<span id="cb5-27"><a href="#cb5-27" tabindex="-1"></a>  <span class="st">&quot;9&quot;</span> <span class="ot">=</span> <span class="st">&quot;Altocumulus of a chaotic sky, generally at several levels&quot;</span>,</span>
+<span id="cb5-28"><a href="#cb5-28" tabindex="-1"></a>  <span class="st">&quot;10&quot;</span> <span class="ot">=</span> <span class="st">&quot;CM clouds invisible owing to darkness, fog, blowing dust or sand, or other similar phenomena, or because of continuous layer of lower clouds&quot;</span></span>
+<span id="cb5-29"><a href="#cb5-29" tabindex="-1"></a>)</span>
+<span id="cb5-30"><a href="#cb5-30" tabindex="-1"></a></span>
+<span id="cb5-31"><a href="#cb5-31" tabindex="-1"></a><span class="co"># From Code Table 0509</span></span>
+<span id="cb5-32"><a href="#cb5-32" tabindex="-1"></a>high_cloud_codes <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb5-33"><a href="#cb5-33" tabindex="-1"></a>  <span class="st">&quot;0&quot;</span> <span class="ot">=</span> <span class="st">&quot;No CH clouds&quot;</span>,</span>
+<span id="cb5-34"><a href="#cb5-34" tabindex="-1"></a>  <span class="st">&quot;1&quot;</span> <span class="ot">=</span> <span class="st">&quot;Cirrus fibratus, sometimes uncinus, not progressively invading the sky&quot;</span>,</span>
+<span id="cb5-35"><a href="#cb5-35" tabindex="-1"></a>  <span class="st">&quot;2&quot;</span> <span class="ot">=</span> <span class="st">&quot;Cirrus spissatus, in patches or entangled sheaves, which usually do not increase and sometimes seem to be the remains of the upper part of a cumulonimbus; or cirrus castellanus or floccus&quot;</span>,</span>
+<span id="cb5-36"><a href="#cb5-36" tabindex="-1"></a>  <span class="st">&quot;3&quot;</span> <span class="ot">=</span> <span class="st">&quot;Cirrus spissatus cumulonimbogenitus&quot;</span>,</span>
+<span id="cb5-37"><a href="#cb5-37" tabindex="-1"></a>  <span class="st">&quot;4&quot;</span> <span class="ot">=</span> <span class="st">&quot;Cirrus uncinus or fibratus, or both, progressively invading the sky; they generally thicken as a whole&quot;</span>,</span>
+<span id="cb5-38"><a href="#cb5-38" tabindex="-1"></a>  <span class="st">&quot;5&quot;</span> <span class="ot">=</span> <span class="st">&quot;Cirrus (often in bands) and cirrostratus, or cirrostratus alone, progressively invading the sky; they generally thicken as a whole, but the continuous veil does not reach 45 degrees above the horizon&quot;</span>,</span>
+<span id="cb5-39"><a href="#cb5-39" tabindex="-1"></a>  <span class="st">&quot;6&quot;</span> <span class="ot">=</span> <span class="st">&quot;Cirrus (often in bands) and cirrostratus, or cirrostratus alone, progressively invading the sky; they generally thicken as a whole; the continuous veil extends more than 45 degrees above the horizon, without the sky being totally covered&quot;</span>,</span>
+<span id="cb5-40"><a href="#cb5-40" tabindex="-1"></a>  <span class="st">&quot;7&quot;</span> <span class="ot">=</span> <span class="st">&quot;Cirrostratus covering the whole sky&quot;</span>,</span>
+<span id="cb5-41"><a href="#cb5-41" tabindex="-1"></a>  <span class="st">&quot;8&quot;</span> <span class="ot">=</span> <span class="st">&quot;Cirrostratus not progressively invading the sky and not entirely covering it&quot;</span>,</span>
+<span id="cb5-42"><a href="#cb5-42" tabindex="-1"></a>  <span class="st">&quot;9&quot;</span> <span class="ot">=</span> <span class="st">&quot;Cirrocumulus alone, or cirrocumulus predominant among the CH clouds&quot;</span>,</span>
+<span id="cb5-43"><a href="#cb5-43" tabindex="-1"></a>  <span class="st">&quot;10&quot;</span> <span class="ot">=</span> <span class="st">&quot;CH clouds invisible owing to darkness, fog, blowing dust or sand, or other similar phenomena, or because of a continuous layer of lower clouds&quot;</span></span>
+<span id="cb5-44"><a href="#cb5-44" tabindex="-1"></a>)</span></code></pre></div>
+</div>
+<div id="ground-state" class="section level2">
+<h2>Ground State</h2>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="co"># From Code Table 0901</span></span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="co"># Ground without snow or ice (E)</span></span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>ground_state1 <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>  <span class="st">&quot;0&quot;</span> <span class="ot">=</span> <span class="st">&quot;Surface of ground dry (without cracks and no appreciable amount of dust or loose sand)&quot;</span>,</span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>  <span class="st">&quot;1&quot;</span> <span class="ot">=</span> <span class="st">&quot;Surface of ground moist&quot;</span>,</span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a>  <span class="st">&quot;2&quot;</span> <span class="ot">=</span> <span class="st">&quot;Surface of ground wet (standing water in small or large pools on surface)&quot;</span>,</span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a>  <span class="st">&quot;3&quot;</span> <span class="ot">=</span> <span class="st">&quot;Flooded&quot;</span>,</span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a>  <span class="st">&quot;4&quot;</span> <span class="ot">=</span> <span class="st">&quot;Surface of ground frozen&quot;</span>,</span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a>  <span class="st">&quot;5&quot;</span> <span class="ot">=</span> <span class="st">&quot;Glaze on ground&quot;</span>,</span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a>  <span class="st">&quot;6&quot;</span> <span class="ot">=</span> <span class="st">&quot;Loose dry dust or sand not covering ground completely&quot;</span>,</span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a>  <span class="st">&quot;7&quot;</span> <span class="ot">=</span> <span class="st">&quot;Thin cover of loose dry dust or sand covering ground completely&quot;</span>,</span>
+<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a>  <span class="st">&quot;8&quot;</span> <span class="ot">=</span> <span class="st">&quot;Moderate or thick cover of loose dry dust or sand covering ground completely&quot;</span>,</span>
+<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a>  <span class="st">&quot;9&quot;</span> <span class="ot">=</span> <span class="st">&quot;Extremely dry with cracks&quot;</span></span>
+<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a>)</span>
+<span id="cb6-15"><a href="#cb6-15" tabindex="-1"></a></span>
+<span id="cb6-16"><a href="#cb6-16" tabindex="-1"></a><span class="co"># From Code Table 0975</span></span>
+<span id="cb6-17"><a href="#cb6-17" tabindex="-1"></a><span class="co"># Ground with snow or ice (E&#39;)</span></span>
+<span id="cb6-18"><a href="#cb6-18" tabindex="-1"></a>ground_snow_ice_codes <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb6-19"><a href="#cb6-19" tabindex="-1"></a>  <span class="st">&quot;0&quot;</span> <span class="ot">=</span> <span class="st">&quot;Ground predominantly covered by ice&quot;</span>,</span>
+<span id="cb6-20"><a href="#cb6-20" tabindex="-1"></a>  <span class="st">&quot;1&quot;</span> <span class="ot">=</span> <span class="st">&quot;Compact or wet snow (with or without ice) covering less than one-half of the ground&quot;</span>,</span>
+<span id="cb6-21"><a href="#cb6-21" tabindex="-1"></a>  <span class="st">&quot;2&quot;</span> <span class="ot">=</span> <span class="st">&quot;Compact or wet snow (with or without ice) covering at least one-half of the ground but ground not completely covered&quot;</span>,</span>
+<span id="cb6-22"><a href="#cb6-22" tabindex="-1"></a>  <span class="st">&quot;3&quot;</span> <span class="ot">=</span> <span class="st">&quot;Even layer of compact or wet snow covering ground completely&quot;</span>,</span>
+<span id="cb6-23"><a href="#cb6-23" tabindex="-1"></a>  <span class="st">&quot;4&quot;</span> <span class="ot">=</span> <span class="st">&quot;Uneven layer of compact or wet snow covering ground completely&quot;</span>,</span>
+<span id="cb6-24"><a href="#cb6-24" tabindex="-1"></a>  <span class="st">&quot;5&quot;</span> <span class="ot">=</span> <span class="st">&quot;Loose dry snow covering less than one-half of the ground&quot;</span>,</span>
+<span id="cb6-25"><a href="#cb6-25" tabindex="-1"></a>  <span class="st">&quot;6&quot;</span> <span class="ot">=</span> <span class="st">&quot;Loose dry snow covering at least one-half of the ground but ground not completely covered&quot;</span>,</span>
+<span id="cb6-26"><a href="#cb6-26" tabindex="-1"></a>  <span class="st">&quot;7&quot;</span> <span class="ot">=</span> <span class="st">&quot;Even layer of loose dry snow covering ground completely&quot;</span>,</span>
+<span id="cb6-27"><a href="#cb6-27" tabindex="-1"></a>  <span class="st">&quot;8&quot;</span> <span class="ot">=</span> <span class="st">&quot;Uneven layer of loose dry snow covering ground completely&quot;</span>,</span>
+<span id="cb6-28"><a href="#cb6-28" tabindex="-1"></a>  <span class="st">&quot;9&quot;</span> <span class="ot">=</span> <span class="st">&quot;Snow covering ground completely; deep drifts&quot;</span></span>
+<span id="cb6-29"><a href="#cb6-29" tabindex="-1"></a>)</span></code></pre></div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

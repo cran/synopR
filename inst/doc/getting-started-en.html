@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>Introducing synopR</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Introducing synopR</h1>
+
+
+
+<p><strong>2026-03-06</strong></p>
+<div id="standard-workflow" class="section level2">
+<h2>Standard workflow</h2>
+<p><code>show_synop_data()</code> requires a character vector or a data
+frame column where each element is a SYNOP string.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(synopR)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>data_input_vector <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;AAXX 04003 87736 32965 00000 10204 20106 39982 40074 5//// 333 10266 20158 555 64169 65090 =&quot;</span>,</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>                       <span class="st">&quot;AAXX 01094 87736 NIL=&quot;</span>,</span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>                       <span class="st">&quot;AAXX 03183 87736 32965 12708 10254 20052 30005 40098 5//// 80005 333 56000 81270 =&quot;</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a>my_data <span class="ot">&lt;-</span> <span class="fu">show_synop_data</span>(data_input_vector, <span class="at">wmo_identifier =</span> <span class="st">&#39;87736&#39;</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a><span class="fu">print</span>(my_data)</span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a><span class="co">#&gt; # A tibble: 3 × 31</span></span>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a><span class="co">#&gt;   wmo_id   Day  Hour Cloud_base_height Visibility Total_cloud_cover</span></span>
+<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt;             &lt;dbl&gt;      &lt;dbl&gt;             &lt;dbl&gt;</span></span>
+<span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a><span class="co">#&gt; 1 87736      4     0                 9         65                 0</span></span>
+<span id="cb1-13"><a href="#cb1-13" tabindex="-1"></a><span class="co">#&gt; 2 87736      1     9                NA         NA                NA</span></span>
+<span id="cb1-14"><a href="#cb1-14" tabindex="-1"></a><span class="co">#&gt; 3 87736      3    18                 9         65                 1</span></span>
+<span id="cb1-15"><a href="#cb1-15" tabindex="-1"></a><span class="co">#&gt; # ℹ 25 more variables: Wind_direction &lt;dbl&gt;, Wind_speed &lt;dbl&gt;,</span></span>
+<span id="cb1-16"><a href="#cb1-16" tabindex="-1"></a><span class="co">#&gt; #   Wind_speed_unit &lt;chr&gt;, Air_temperature &lt;dbl&gt;, Dew_point &lt;dbl&gt;,</span></span>
+<span id="cb1-17"><a href="#cb1-17" tabindex="-1"></a><span class="co">#&gt; #   Relative_humidity &lt;dbl&gt;, Station_pressure &lt;dbl&gt;, MSLP_GH &lt;dbl&gt;,</span></span>
+<span id="cb1-18"><a href="#cb1-18" tabindex="-1"></a><span class="co">#&gt; #   Present_weather &lt;dbl&gt;, Past_weather1 &lt;dbl&gt;, Past_weather2 &lt;dbl&gt;,</span></span>
+<span id="cb1-19"><a href="#cb1-19" tabindex="-1"></a><span class="co">#&gt; #   Precipitation_S1 &lt;dbl&gt;, Precip_period_S1 &lt;dbl&gt;, Cloud_amount_Nh &lt;dbl&gt;,</span></span>
+<span id="cb1-20"><a href="#cb1-20" tabindex="-1"></a><span class="co">#&gt; #   Low_clouds_CL &lt;dbl&gt;, Medium_clouds_CM &lt;dbl&gt;, High_clouds_CH &lt;dbl&gt;,</span></span>
+<span id="cb1-21"><a href="#cb1-21" tabindex="-1"></a><span class="co">#&gt; #   Max_temperature &lt;dbl&gt;, Min_temperature &lt;dbl&gt;, Ground_state &lt;dbl&gt;, …</span></span></code></pre></div>
+<p>If a meteorological parameter isn’t present in any of the SYNOP
+messages, you can set <code>remove_empty_cols = TRUE</code> to remove
+the extra columns.</p>
+<p>The optional <code>wmo_identifier</code> argument offers a
+significant advantage: it allows for automatic filtering in case the
+data contains messages from other stations.</p>
+<p>While the following example uses a vector with only two messages for
+simplicity, if you are working with thousands of SYNOP strings from
+multiple stations, this built-in filtering becomes extremely
+convenient.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">library</span>(synopR)</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="co"># Messages from 87736 and 87016</span></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>mixed_synop <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;AAXX 01183 87736 12465 20000 10326 20215 39974 40064 5//// 60001 82100 333 56600 82818=&quot;</span>,</span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>                 <span class="st">&quot;AAXX 04033 87016 41460 83208 10200 20194 39712 40114 50003 70292 888// 333 56699 82810 88615=&quot;</span></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>                 )</span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a>colorado_data <span class="ot">&lt;-</span> <span class="fu">show_synop_data</span>(mixed_synop, <span class="at">wmo_identifier =</span> <span class="st">&#39;87736&#39;</span>, <span class="at">remove_empty_cols =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="co">#&gt; Warning in show_synop_data(mixed_synop, wmo_identifier = &quot;87736&quot;,</span></span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a><span class="co">#&gt; remove_empty_cols = TRUE): 1 message(s) do not contain the identifier &#39;87736&#39;</span></span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="co">#&gt; and will be discarded.</span></span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">t</span>(colorado_data))</span></code></pre></div>
+<table>
+<tbody>
+<tr class="odd">
+<td align="left">wmo_id</td>
+<td align="left">87736</td>
+</tr>
+<tr class="even">
+<td align="left">Day</td>
+<td align="left">1</td>
+</tr>
+<tr class="odd">
+<td align="left">Hour</td>
+<td align="left">18</td>
+</tr>
+<tr class="even">
+<td align="left">Cloud_base_height</td>
+<td align="left">4</td>
+</tr>
+<tr class="odd">
+<td align="left">Visibility</td>
+<td align="left">65</td>
+</tr>
+<tr class="even">
+<td align="left">Total_cloud_cover</td>
+<td align="left">2</td>
+</tr>
+<tr class="odd">
+<td align="left">Wind_direction</td>
+<td align="left">0</td>
+</tr>
+<tr class="even">
+<td align="left">Wind_speed</td>
+<td align="left">0</td>
+</tr>
+<tr class="odd">
+<td align="left">Wind_speed_unit</td>
+<td align="left">knots</td>
+</tr>
+<tr class="even">
+<td align="left">Air_temperature</td>
+<td align="left">32.6</td>
+</tr>
+<tr class="odd">
+<td align="left">Dew_point</td>
+<td align="left">21.5</td>
+</tr>
+<tr class="even">
+<td align="left">Relative_humidity</td>
+<td align="left">52.1</td>
+</tr>
+<tr class="odd">
+<td align="left">Station_pressure</td>
+<td align="left">997.4</td>
+</tr>
+<tr class="even">
+<td align="left">MSLP_GH</td>
+<td align="left">1006.4</td>
+</tr>
+<tr class="odd">
+<td align="left">Precipitation_S1</td>
+<td align="left">0</td>
+</tr>
+<tr class="even">
+<td align="left">Precip_period_S1</td>
+<td align="left">6</td>
+</tr>
+<tr class="odd">
+<td align="left">Cloud_amount_Nh</td>
+<td align="left">2</td>
+</tr>
+<tr class="even">
+<td align="left">Low_clouds_CL</td>
+<td align="left">1</td>
+</tr>
+<tr class="odd">
+<td align="left">Medium_clouds_CM</td>
+<td align="left">0</td>
+</tr>
+<tr class="even">
+<td align="left">High_clouds_CH</td>
+<td align="left">0</td>
+</tr>
+</tbody>
+</table>
+<p>It is good practice to check the SYNOP messages for non-standard
+structures. The <code>check_synop()</code> function is designed to
+handle these. It will make sure every message starts with “AAXX” and
+ends with “=”, does not contain invalid characters (valid characters
+after removing “AAXX” and “=” are digits 0-9, ‘/’ and ‘NIL’), and
+verifies that all groups consist of 5 digits (except for the section
+identifiers ‘333’ and ‘555’).</p>
+<p>The <code>check_synop()</code> function accepts either a string
+vector or a specific data frame column containing SYNOP strings. A data
+frame with multiple columns —where the SYNOP column is not explicitly
+specified— will be accepted <strong>if and only if that data frame is
+the direct output of</strong> <code>parse_ogimet()</code>.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">library</span>(synopR)</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>my_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">syn =</span> <span class="fu">c</span>(<span class="st">&quot;AAXX 01183 87736 12465 20000 10326 20215 39974 40064 5//// 60001 82100 333 56600 82818=&quot;</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>                            <span class="st">&quot;AAXX 01183 87736 12465 20000 10326 20215 39974 40064 5//// 60001 82100 333 56600 82818=&quot;</span>),</span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>                    <span class="at">second_column =</span> <span class="fu">c</span>(<span class="dv">5</span>,<span class="dv">7</span>))</span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="fu">check_synop</span>(my_df) <span class="co"># Bad</span></span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="co">#&gt; # A tibble: 2 × 2</span></span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="co">#&gt;   is_valid error_log                                                </span></span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="co">#&gt;   &lt;lgl&gt;    &lt;chr&gt;                                                    </span></span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a><span class="co">#&gt; 1 FALSE    Missing AAXX | Missing &#39;=&#39; terminator | Invalid groups: 5</span></span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a><span class="co">#&gt; 2 FALSE    Missing AAXX | Missing &#39;=&#39; terminator | Invalid groups: 7</span></span>
+<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a></span>
+<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a><span class="fu">check_synop</span>(my_df<span class="sc">$</span>syn) <span class="co"># Good</span></span>
+<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a><span class="co">#&gt; # A tibble: 2 × 2</span></span>
+<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a><span class="co">#&gt;   is_valid error_log</span></span>
+<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a><span class="co">#&gt;   &lt;lgl&gt;    &lt;chr&gt;    </span></span>
+<span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a><span class="co">#&gt; 1 TRUE     &quot;&quot;       </span></span>
+<span id="cb3-19"><a href="#cb3-19" tabindex="-1"></a><span class="co">#&gt; 2 TRUE     &quot;&quot;</span></span></code></pre></div>
+<p>So far, our messages have a correct structure (even the NIL ones).
+Now, let’s see what happens when they don’t.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">library</span>(synopR)</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="fu">check_synop</span>(<span class="fu">c</span>(<span class="st">&quot;AAXX 01183 87736 12465 20000 10326 20215 39974 40064 5//// 60001 82100 333 56600 82818=&quot;</span>,</span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>              <span class="st">&quot;AAXX 01183 87736 12465 20000 10326 20215 39974 40064 5//// 6000182100 333 56600 82818=&quot;</span>,</span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>              <span class="st">&quot;AAXX 01183 87736 12465 20000 10326 2021 39974 40064 5//// 60001 82100 333 56600 82818=&quot;</span>,</span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>              <span class="st">&quot;AAXX 01183 87736 12465 20000 10326 20215 39974 40064 5//// 60001 82100 333 56600 82818&quot;</span>,</span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a>              <span class="st">&quot;Not a synop message=&quot;</span>))</span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a><span class="co">#&gt; # A tibble: 5 × 2</span></span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a><span class="co">#&gt;   is_valid error_log                                              </span></span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a><span class="co">#&gt;   &lt;lgl&gt;    &lt;chr&gt;                                                  </span></span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a><span class="co">#&gt; 1 TRUE     &quot;&quot;                                                     </span></span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a><span class="co">#&gt; 2 FALSE    &quot;Invalid groups: 6000182100&quot;                           </span></span>
+<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a><span class="co">#&gt; 3 FALSE    &quot;Invalid groups: 2021&quot;                                 </span></span>
+<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a><span class="co">#&gt; 4 FALSE    &quot;Missing &#39;=&#39; terminator&quot;                               </span></span>
+<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a><span class="co">#&gt; 5 FALSE    &quot;Missing AAXX | Invalid groups: Not, a, synop, message&quot;</span></span></code></pre></div>
+<p><code>check_synop()</code> returns a tibble where the first column
+indicates whether each SYNOP is valid (TRUE) or not (FALSE), and the
+second column describes the specific error found. In our example:</p>
+<ul>
+<li>The first SYNOP is correct.</li>
+<li>In the second, there is a missing space between groups 6 and 8 in
+Section 1.</li>
+<li>In the third, group 2 of Section 3 contains only 4 digits.</li>
+<li>The fourth message is missing the “=” terminator (remember that
+SYNOP messages must always start with “AAXX” and end with “=”).</li>
+<li>The fifth is simply not a SYNOP string at all.</li>
+</ul>
+</div>
+<div id="workflow-with-ogimet" class="section level2">
+<h2>Workflow with Ogimet</h2>
+<p>The following SYNOP messages were retrieved from <a href="https://www.ogimet.com/cgi-bin/getsynop?block=87736&amp;begin=202602010300&amp;end=202602012300">Ogimet</a>
+for the Rio Colorado station, Argentina (WMO identifier: 87736). We will
+observe that these are not “pure” SYNOP strings; they include a prefix
+added by Ogimet that specifies the station ID (87736) along with the
+date and time of the observation.</p>
+<p>However, this is not an issue, as we can use the
+<code>parse_ogimet()</code> function. This tool is specifically designed
+to separate these aggregates from the raw SYNOP message for
+processing.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">library</span>(synopR)</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>data_input <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">synops =</span> <span class="fu">c</span>(<span class="st">&quot;87736,2026,02,01,03,00,AAXX 01034 87736 NIL=&quot;</span>,</span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>                                    <span class="st">&quot;87736,2026,02,01,06,00,AAXX 01064 87736 NIL=&quot;</span>,</span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>                                    <span class="st">&quot;87736,2026,02,01,09,00,AAXX 01094 87736 NIL=&quot;</span>,</span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>                                    <span class="st">&quot;87736,2026,02,01,12,00,AAXX 01123 87736 12965 31808 10240 20210 39992 40082 5//// 60104 82075 333 10282 20216 56055 82360=&quot;</span>,</span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a>                                    <span class="st">&quot;87736,2026,02,01,15,00,AAXX 01154 87736 NIL=&quot;</span>,</span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a>                                    <span class="st">&quot;87736,2026,02,01,18,00,AAXX 01183 87736 12465 20000 10326 20215 39974 40064 5//// 60001 82100 333 56600 82818=&quot;</span>,</span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a>                                    <span class="st">&quot;87736,2026,02,01,21,00,AAXX 01214 87736 NIL=&quot;</span>))</span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a><span class="co"># Note that `parse_ogimet(data_input)` is incorrect</span></span>
+<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a>data_from_ogimet <span class="ot">&lt;-</span> <span class="fu">parse_ogimet</span>(data_input<span class="sc">$</span>synops) </span>
+<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a></span>
+<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a><span class="fu">print</span>(data_from_ogimet)</span>
+<span id="cb5-15"><a href="#cb5-15" tabindex="-1"></a><span class="co">#&gt; # A tibble: 7 × 5</span></span>
+<span id="cb5-16"><a href="#cb5-16" tabindex="-1"></a><span class="co">#&gt;    Year Month Day_Ogimet Hour_Ogimet Raw_synop                                  </span></span>
+<span id="cb5-17"><a href="#cb5-17" tabindex="-1"></a><span class="co">#&gt;   &lt;dbl&gt; &lt;dbl&gt;      &lt;dbl&gt;       &lt;dbl&gt; &lt;chr&gt;                                      </span></span>
+<span id="cb5-18"><a href="#cb5-18" tabindex="-1"></a><span class="co">#&gt; 1  2026     2          1           3 AAXX 01034 87736 NIL=                      </span></span>
+<span id="cb5-19"><a href="#cb5-19" tabindex="-1"></a><span class="co">#&gt; 2  2026     2          1           6 AAXX 01064 87736 NIL=                      </span></span>
+<span id="cb5-20"><a href="#cb5-20" tabindex="-1"></a><span class="co">#&gt; 3  2026     2          1           9 AAXX 01094 87736 NIL=                      </span></span>
+<span id="cb5-21"><a href="#cb5-21" tabindex="-1"></a><span class="co">#&gt; 4  2026     2          1          12 AAXX 01123 87736 12965 31808 10240 20210 3…</span></span>
+<span id="cb5-22"><a href="#cb5-22" tabindex="-1"></a><span class="co">#&gt; 5  2026     2          1          15 AAXX 01154 87736 NIL=                      </span></span>
+<span id="cb5-23"><a href="#cb5-23" tabindex="-1"></a><span class="co">#&gt; 6  2026     2          1          18 AAXX 01183 87736 12465 20000 10326 20215 3…</span></span>
+<span id="cb5-24"><a href="#cb5-24" tabindex="-1"></a><span class="co">#&gt; 7  2026     2          1          21 AAXX 01214 87736 NIL=</span></span>
+<span id="cb5-25"><a href="#cb5-25" tabindex="-1"></a></span>
+<span id="cb5-26"><a href="#cb5-26" tabindex="-1"></a><span class="co"># A &#39;Year&#39; column is included!</span></span>
+<span id="cb5-27"><a href="#cb5-27" tabindex="-1"></a><span class="fu">parse_ogimet</span>(data_input<span class="sc">$</span>synops) <span class="sc">|&gt;</span> <span class="fu">show_synop_data</span>(<span class="at">wmo_identifier =</span> <span class="dv">87736</span>, <span class="at">remove_empty_cols =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb5-28"><a href="#cb5-28" tabindex="-1"></a><span class="co">#&gt; # A tibble: 7 × 24</span></span>
+<span id="cb5-29"><a href="#cb5-29" tabindex="-1"></a><span class="co">#&gt;   wmo_id  Year Month   Day  Hour Cloud_base_height Visibility Total_cloud_cover</span></span>
+<span id="cb5-30"><a href="#cb5-30" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;             &lt;dbl&gt;      &lt;dbl&gt;             &lt;dbl&gt;</span></span>
+<span id="cb5-31"><a href="#cb5-31" tabindex="-1"></a><span class="co">#&gt; 1 87736   2026     2     1     3                NA         NA                NA</span></span>
+<span id="cb5-32"><a href="#cb5-32" tabindex="-1"></a><span class="co">#&gt; 2 87736   2026     2     1     6                NA         NA                NA</span></span>
+<span id="cb5-33"><a href="#cb5-33" tabindex="-1"></a><span class="co">#&gt; 3 87736   2026     2     1     9                NA         NA                NA</span></span>
+<span id="cb5-34"><a href="#cb5-34" tabindex="-1"></a><span class="co">#&gt; 4 87736   2026     2     1    12                 9         65                 3</span></span>
+<span id="cb5-35"><a href="#cb5-35" tabindex="-1"></a><span class="co">#&gt; 5 87736   2026     2     1    15                NA         NA                NA</span></span>
+<span id="cb5-36"><a href="#cb5-36" tabindex="-1"></a><span class="co">#&gt; 6 87736   2026     2     1    18                 4         65                 2</span></span>
+<span id="cb5-37"><a href="#cb5-37" tabindex="-1"></a><span class="co">#&gt; 7 87736   2026     2     1    21                NA         NA                NA</span></span>
+<span id="cb5-38"><a href="#cb5-38" tabindex="-1"></a><span class="co">#&gt; # ℹ 16 more variables: Wind_direction &lt;dbl&gt;, Wind_speed &lt;dbl&gt;,</span></span>
+<span id="cb5-39"><a href="#cb5-39" tabindex="-1"></a><span class="co">#&gt; #   Wind_speed_unit &lt;chr&gt;, Air_temperature &lt;dbl&gt;, Dew_point &lt;dbl&gt;,</span></span>
+<span id="cb5-40"><a href="#cb5-40" tabindex="-1"></a><span class="co">#&gt; #   Relative_humidity &lt;dbl&gt;, Station_pressure &lt;dbl&gt;, MSLP_GH &lt;dbl&gt;,</span></span>
+<span id="cb5-41"><a href="#cb5-41" tabindex="-1"></a><span class="co">#&gt; #   Precipitation_S1 &lt;dbl&gt;, Precip_period_S1 &lt;dbl&gt;, Cloud_amount_Nh &lt;dbl&gt;,</span></span>
+<span id="cb5-42"><a href="#cb5-42" tabindex="-1"></a><span class="co">#&gt; #   Low_clouds_CL &lt;dbl&gt;, Medium_clouds_CM &lt;dbl&gt;, High_clouds_CH &lt;dbl&gt;,</span></span>
+<span id="cb5-43"><a href="#cb5-43" tabindex="-1"></a><span class="co">#&gt; #   Max_temperature &lt;dbl&gt;, Min_temperature &lt;dbl&gt;</span></span></code></pre></div>
+</div>
+<div id="limitations" class="section level2">
+<h2>Limitations</h2>
+<div id="general-limitations" class="section level3">
+<h3>General limitations</h3>
+<ul>
+<li><p>The validity of a SYNOP string doesn’t mean its content is
+correct. A quality-control of the derived data is not included. Data
+post-processing is on you.</p></li>
+<li><p>Group 555 (reserved for national distribution) is currently
+ignored, as its content varies by country. However, future versions of
+<strong>synopR</strong> may include functions to extract data from this
+section based on user requirements.</p></li>
+<li><p>There is no support for sections 222 y 444.
+<code>show_synop_data()</code> will incorrectly decode the
+message.</p></li>
+</ul>
+</div>
+<div id="specific-limitations" class="section level3">
+<h3>Specific limitations</h3>
+<p>The following meteorological parameters are not completely decoded,
+as they will not produce a strictly numeric vector, or the output would
+be too long:</p>
+<ul>
+<li>Horizontal visibility <code>VV</code></li>
+<li>Lowest cloud base height <code>h</code></li>
+<li>Cloud cover <code>N</code> and <code>Nh</code>, <strong>but</strong>
+they can be directly interpreted as in oktas (octaves), except when it’s
+9, which means the sky is not visible due to fog or other meteorological
+phenomenon</li>
+<li>Present and past weather <code>ww</code>, <code>W1</code>,
+<code>W2</code>, cloud-related <code>Cl</code>, <code>Cm</code> and
+<code>Ch</code>. ground-related <code>E</code> and <code>E&#39;</code></li>
+</ul>
+<p>However, <strong>Code tables are available</strong> in the section
+“Code Tables” for direct conversions!</p>
+<p>You should also be aware of this:</p>
+<ul>
+<li>Wind direction = 99 means “variable wind direction”</li>
+<li>Wind speed greater than 99 units (m/s or knots) are not supported
+(the final result will be 99), but it’s expected it won’t break the
+function</li>
+<li>If group 2 from section 1 informs relative humidity instead of dew
+point, the final value in the Dew_point column will be NA</li>
+<li>For geopotential height, only pressure levels 850, 700 and 500 hPa
+are supported (others pressure levels will result in NA)</li>
+<li>Groups 5 and 9 from section 1 are ignored</li>
+<li>Imperceptible precipitation, codified as 990, is considered as 0.01
+(mm), so it can be distinguished from a 0 value</li>
+<li>A cloud description “/” (clouds not visible) is mapped to 10</li>
+<li>Snow depth <code>sss</code> is assumed to be between 1 cm and 996
+cm. ‘997’ means ‘less than 0.5 cm’, 998 “Snow cover, not continuous” and
+999 “Measurement impossible or inaccurate”</li>
+<li>Groups 5 (including 55, 56, 57, etc…), 7, 8 and 9 from section 3 are
+ignored</li>
+</ul>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
