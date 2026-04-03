@@ -4,18 +4,21 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 
-## ----extraccion datos estandar------------------------------------------------
+## -----------------------------------------------------------------------------
 library(synopR)
-data_input_vector <- c("AAXX 04003 87736 32965 00000 10204 20106 39982 40074 5//// 333 10266 20158 555 64169 65090 =",
-                       "AAXX 01094 87736 NIL=",
+
+# Notice that the second SYNOP will be removed because of the incomplete group '8127'
+data_input_vector <- c("AAXX 04003 87736 32965 00000 10204 20106 39982 40074 5//// 333 10266 20158 =",
+                       "AAXX 03183 87736 32965 12708 10254 20052 30005 40098 5//// 80005 333 56000 8127 =",
                        "AAXX 03183 87736 32965 12708 10254 20052 30005 40098 5//// 80005 333 56000 81270 =")
 
-my_data <- show_synop_data(data_input_vector, wmo_identifier = '87736')
+checked <- check_synop(data_input_vector)
+my_data <- show_synop_data(data_input_vector[checked$is_valid == TRUE])
 
-print(my_data)
+knitr::kable(t(my_data))
 
 
-## ----ventaja wmo_identifier---------------------------------------------------
+## -----------------------------------------------------------------------------
 library(synopR)
 # Messages from 87736 and 87016
 mixed_synop <- c("AAXX 01183 87736 12465 20000 10326 20215 39974 40064 5//// 60001 82100 333 56600 82818=",
@@ -25,33 +28,11 @@ mixed_synop <- c("AAXX 01183 87736 12465 20000 10326 20215 39974 40064 5//// 600
 colorado_data <- show_synop_data(mixed_synop, wmo_identifier = '87736', remove_empty_cols = TRUE)
 knitr::kable(t(colorado_data))
 
-## ----check synops2, error = TRUE----------------------------------------------
-try({
+## -----------------------------------------------------------------------------
 library(synopR)
 
-my_df <- data.frame(syn = c("AAXX 01183 87736 12465 20000 10326 20215 39974 40064 5//// 60001 82100 333 56600 82818=",
-                            "AAXX 01183 87736 12465 20000 10326 20215 39974 40064 5//// 60001 82100 333 56600 82818="),
-                    second_column = c(5,7))
-
-check_synop(my_df) # Bad
-
-check_synop(my_df$syn) # Good
-
-})
-
-## ----check synops3------------------------------------------------------------
-library(synopR)
-
-check_synop(c("AAXX 01183 87736 12465 20000 10326 20215 39974 40064 5//// 60001 82100 333 56600 82818=",
-              "AAXX 01183 87736 12465 20000 10326 20215 39974 40064 5//// 6000182100 333 56600 82818=",
-              "AAXX 01183 87736 12465 20000 10326 2021 39974 40064 5//// 60001 82100 333 56600 82818=",
-              "AAXX 01183 87736 12465 20000 10326 20215 39974 40064 5//// 60001 82100 333 56600 82818",
-              "Not a synop message="))
-
-
-## ----parse_ogimet-------------------------------------------------------------
-library(synopR)
-
+# Suppose we have downloaded this data with:
+# download_from_ogimet("87736","2026-02-01","2026-02-01")
 data_input <- data.frame(synops = c("87736,2026,02,01,03,00,AAXX 01034 87736 NIL=",
                                     "87736,2026,02,01,06,00,AAXX 01064 87736 NIL=",
                                     "87736,2026,02,01,09,00,AAXX 01094 87736 NIL=",
@@ -63,8 +44,7 @@ data_input <- data.frame(synops = c("87736,2026,02,01,03,00,AAXX 01034 87736 NIL
 # Note that `parse_ogimet(data_input)` is incorrect
 data_from_ogimet <- parse_ogimet(data_input$synops) 
 
-print(data_from_ogimet)
-
-# A 'Year' column is included!
-parse_ogimet(data_input$synops) |> show_synop_data(wmo_identifier = 87736, remove_empty_cols = TRUE)
+# 'Year' and 'Month' column are included!
+# 'NIL' messages are ignored
+parse_ogimet(data_input$synops) |> show_synop_data() |> t() |> knitr::kable()
 
